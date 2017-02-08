@@ -35,7 +35,7 @@ public class PageRank {
 	}
 	
 	PageRank(Graph g) { 
-		System.out.println("Nodes : " + Graph.getSetOfNodes().size() + "Edges : " + Graph.getSetOfEdges().size()); 
+		System.out.println("Nodes : " + Graph.getSetOfNodes().size() + " Edges : " + Graph.getSetOfEdges().size()); 
 		int n = Graph.getSetOfNodes().size(); 
 		int m = 0; 
 		double[][] M = new double[n][n]; 
@@ -45,7 +45,7 @@ public class PageRank {
 			nodes[i].setOutDegree();
 			int outDegree = nodes[i].getOutDegree();
 			for(int j = 0; j < n; j++) { 
-				if(nodes[i].getNeighbors().containsValue(nodes[j])) { 
+				if(nodes[i].getChildren().containsValue(nodes[j])) { 
 					M[i][j] = 1/outDegree; 
 					m++;
 				} 
@@ -97,7 +97,55 @@ public class PageRank {
 		} 
 		L[n] = m; 
 		
+		double[] r = this.compute(C, L, I); 
 		
+		double p = this.proba(r); 
+		
+		System.out.println(p);
+	}
+	
+	public double[] compute(double[] C, int[] L, int[] I) { 
+		int n = Graph.getSetOfNodes().size(); 
+		
+		double[] x = new double[n];
+		for (int i = 0; i < n; i++) { 
+			if(i == 0) { 
+				x[i] = 1.0;
+			} 
+			else { 
+				x[i] = 0.0;
+			}
+		} 
+		
+		double[] y = new double[n]; 
+		for (int i = 0; i < n; i++) { 
+			y[i] = 0.0; 
+		} 
+		
+		for (int i = 0; i < n; i++) {
+			for (int j = L[i]; j < L[i+1]; j++) {
+				y[I[j]] += C[j] * x[i];
+			}
+		} 
+		
+		for (int i = 0; i < n; i++) { 
+			x[i] = y[i]; 
+		} 
+		
+		return x;
+	} 
+	
+	public double proba(double[] r) { 
+		int n = Graph.getSetOfNodes().size(); 
+		
+		double count = 0;
+		for (int i = 0; i < n; i++) { 
+			count = count + r[i]*r[i]; 
+		} 
+		
+		double p = Math.sqrt(count); 
+		
+		return p;
 	}
 
 }
