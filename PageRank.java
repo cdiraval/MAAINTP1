@@ -46,7 +46,7 @@ public class PageRank {
 			int outDegree = nodes[i].getOutDegree();
 			for(int j = 0; j < n; j++) { 
 				if(nodes[i].getChildren().containsValue(nodes[j])) { 
-					M[i][j] = 1/outDegree; 
+					M[i][j] = 1.0/outDegree; 
 					m++;
 				} 
 				else { 
