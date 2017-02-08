@@ -11,6 +11,7 @@
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 public class Graph { 
 	private static String name;
@@ -94,20 +95,32 @@ public class Graph {
 		return type;
 	}
 	
-	public static HashMap<String, Node> getSetOfNodes() { 
-		return setOfNodes;
-	}
-	
 	public static void setSetOfNodes(String name, Node node) { 
 		setOfNodes.put(name, node);
 	}
 	
-	public static HashMap<Integer, Edge> getSetOfEdges() { 
-		return setOfEdges;
+	public static HashMap<String, Node> getSetOfNodes() { 
+		return setOfNodes;
+	} 
+	
+	public static Node[] getNodes() { 
+		int taille = setOfNodes.size();
+		Node nodes[] = new Node[taille]; 
+		int i = 0;
+		for(Entry<String, Node> entry : setOfNodes.entrySet()) {
+			Node value = entry.getValue();
+			nodes[i] = value; 
+			i++;
+		}
+		return nodes; 	
 	}
 	
 	public static void setSetOfEdges(Integer number, Edge edge) { 
 		setOfEdges.put(number, edge);
+	} 
+	
+	public static HashMap<Integer, Edge> getSetOfEdges() { 
+		return setOfEdges;
 	}
 	
 }
