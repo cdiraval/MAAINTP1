@@ -15,7 +15,8 @@ import java.util.Map.Entry;
 public class Node { 
 	private String name;
 	private int number;
-	private int degree; 
+	private int incDegree; 
+	private int outDegree; 
 	Graph graph;
 	
 	public String getName() { 
@@ -41,16 +42,28 @@ public class Node {
 		return this.number;
 	}
 	
-	public void setDegree() { 
-		this.degree = this.getNeighbors().size(); 
+	public void setIncDegree() { 
+		this.incDegree = this.getParents().size(); 
 	}
 	
-	public void setDegree(int degree) { 
-		this.degree = degree; 
+	public void setIncDegree(int degree) { 
+		this.incDegree = degree; 
 	}
 	
-	public int getDegree() { 
-		return this.degree;
+	public int getIncDegree() { 
+		return this.incDegree;
+	}
+	
+	public void setOutDegree() { 
+		this.outDegree = this.getChildren().size(); 
+	}
+	
+	public void setOutDegree(int degree) { 
+		this.outDegree = degree; 
+	}
+	
+	public int getOutDegree() { 
+		return this.outDegree;
 	}
 	
 	public HashMap<Integer, Node> getParents() { 
