@@ -9,7 +9,10 @@
  */
 
 
-public class PageRank {
+public class PageRank { 
+	
+	private int n = Graph.getSetOfNodes().size(); 
+	private double epsilon = 0.77;
 
 	public static void main(String[] args) { 
 		if(args.length == 1) { 
@@ -35,11 +38,9 @@ public class PageRank {
 	}
 	
 	PageRank(Graph g) { 
-		System.out.println("Nodes : " + Graph.getSetOfNodes().size() + " Edges : " + Graph.getSetOfEdges().size()); 
-		int n = Graph.getSetOfNodes().size(); 
 		int m = 0; 
 		double[][] M = new double[n][n]; 
-		Node[] nodes = Graph.getNodes();//new Node[n]; 
+		Node[] nodes = Graph.getNodes();
 		
 		for(int i = 0; i < n; i++) { 
 			nodes[i].setOutDegree();
@@ -55,12 +56,16 @@ public class PageRank {
 			}
 		} 
 		
+		this.calcul(M, m);
+	}
+	
+	public void calcul(double[][] M, int m) { 
+		
 		double[] C = new double[m]; 
 		int[] L = new int[n+1]; 
 		int[] I = new int[m];
 		
 		int k = 0; 
-		//int t = 0; 
 		boolean control = false;
 		for(int i = 0; i < n; i++) { 
 			int o = 0; 
@@ -97,27 +102,53 @@ public class PageRank {
 		} 
 		L[n] = m; 
 		
-		double[] r = this.compute(C, L, I); 
-		
-		double p = this.proba(r); 
-		
-		System.out.println(p);
-	}
-	
-	public double[] compute(double[] C, int[] L, int[] I) { 
-		int n = Graph.getSetOfNodes().size(); 
-		
-		double[] x = new double[n];
+		double[] vecteur = new double[n];
 		for (int i = 0; i < n; i++) { 
 			if(i == 0) { 
-				x[i] = 1.0;
+				vecteur[i] = 1.0;
 			} 
 			else { 
-				x[i] = 0.0;
+				vecteur[i] = 0.0;
 			}
 		} 
 		
+		double q = 0.0; 
+		int step = 0;
+		
+		do { 
+			double[] r = this.produit(C, L, I, vecteur); 
+			q = this.norme(r); 
+			step++; 
+			
+			for (int i = 0; i < n; i++) { 
+				vecteur[i] = r[i]; 
+			} 
+		} while(q < epsilon);
+		
+		System.out.println();
+		
+		for (int i = 0; i < n; i++) { 
+			if(i == 0) { 
+				System.out.print("Le vecteur Final : ( " + vecteur[i] + ", ");
+			} 
+			else if(i == n-1) { 
+				System.out.print(vecteur[i] + " )"); 
+			} 
+			else { 
+				System.out.print(vecteur[i] + ", "); 
+			} 
+		} 
+		
+		System.out.println();
+		
+		System.out.println("Le nombre de pas effectué avant la convergence : " + step); 
+		
+		System.out.println();
+	}
+	
+	public double[] produit(double[] C, int[] L, int[] I, double[] x) { 
 		double[] y = new double[n]; 
+		
 		for (int i = 0; i < n; i++) { 
 			y[i] = 0.0; 
 		} 
@@ -128,17 +159,12 @@ public class PageRank {
 			}
 		} 
 		
-		for (int i = 0; i < n; i++) { 
-			x[i] = y[i]; 
-		} 
-		
-		return x;
+		return y;
 	} 
 	
-	public double proba(double[] r) { 
-		int n = Graph.getSetOfNodes().size(); 
+	public double norme(double[] r) { 
+		double count = 0.0; 
 		
-		double count = 0;
 		for (int i = 0; i < n; i++) { 
 			count = count + r[i]*r[i]; 
 		} 
